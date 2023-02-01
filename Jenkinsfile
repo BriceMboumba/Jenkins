@@ -1,11 +1,27 @@
-node {
-    stage('Clone') {
-    git 'https://github.com/BriceMboumba/Jenkins.git'
-    }
-    stage('Build') {
-    sh label: '', script: 'javac Main.java'
-    }
-    stage('Run') {
-    sh label: '', script: 'java Main'
+pipeline {
+    agent any
+    stages {
+        stage('Pull') {
+            steps {
+                checkout([$class: 'GitSCM',
+                branches: [[name: '*/main']],
+                doGenerateSubmoduleConfigurations: false,
+                extensions: [],
+                submoduleCfg: [],
+                userRemoteConfigs: [[url: 'https://github.com/BriceMboumba/Jenkins.git']]])
+                sh "ls"
+            }
+        }
+        stage('Build') {
+            steps {
+                sh "javac Main.java"
+            }
+        }
+        stage('Run') {
+            steps {
+                sh "java Main"
+            }
+        }
     }
 }
+
